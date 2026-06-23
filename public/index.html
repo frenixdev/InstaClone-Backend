@@ -1,0 +1,112 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>InstaClone Backend API Guide</title>
+    <style>
+      body { font-family: Arial, sans-serif; background:#0f172a; color:#e2e8f0; margin:0; padding:24px; line-height:1.5; }
+      h1, h2 { color:#f8fafc; }
+      .container { max-width: 980px; margin:0 auto; }
+      .card { background:#1e293b; border:1px solid #334155; border-radius:12px; padding:16px; margin-bottom:16px; }
+      code, pre { background:#0b1220; border:1px solid #1e293b; border-radius:8px; }
+      code { padding:2px 6px; }
+      pre { padding:12px; overflow:auto; }
+      .method { font-weight:bold; padding:2px 8px; border-radius:999px; margin-right:8px; font-size:12px; }
+      .get{ background:#065f46; } .post{ background:#1d4ed8; } .patch{ background:#a16207; } .delete{ background:#991b1b; }
+      .auth { color:#93c5fd; font-size: 14px; }
+      ul { padding-left: 20px; }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <h1>InstaClone Backend API Guide</h1>
+      <p>Welcome! Use this page to test and understand the API routes. For every route marked <code>Auth Required</code>, send the header <code>Authorization: Bearer &lt;token&gt;</code>.</p>
+
+      <div class="card">
+        <h2>Auth Routes</h2>
+        <p><span class="method post">POST</span><code>/api/auth/register</code> <span class="auth">Public</span></p>
+        <p>Register a new user.</p>
+        <pre>{
+  "email": "user@example.com",
+  "username": "newuser",
+  "password": "strongPassword123"
+}</pre>
+
+        <p><span class="method post">POST</span><code>/api/auth/login</code> <span class="auth">Public</span></p>
+        <p>Login using <code>email</code> or <code>username</code> with <code>password</code>.</p>
+        <pre>{
+  "email": "user@example.com",
+  "password": "strongPassword123"
+}</pre>
+
+        <p><span class="method post">POST</span><code>/api/auth/forget</code> <span class="auth">Public</span></p>
+        <p>Reset password (email and username must match an existing user).</p>
+        <pre>{
+  "email": "user@example.com",
+  "username": "newuser",
+  "password": "newPassword123"
+}</pre>
+      </div>
+
+      <div class="card">
+        <h2>User Routes</h2>
+        <p><span class="method post">POST</span><code>/api/user/pfp</code> <span class="auth">Auth Required</span></p>
+        <p>Upload a profile image. Use <code>multipart/form-data</code> with the field <code>image-file</code>.</p>
+
+        <p><span class="method delete">DELETE</span><code>/api/user/pfp</code> <span class="auth">Auth Required</span></p>
+        <p>Remove the profile image. No request body is required.</p>
+
+        <p><span class="method patch">PATCH</span><code>/api/user</code> <span class="auth">Auth Required</span></p>
+        <p>Update user details (partial body is allowed).</p>
+        <pre>{
+  "name": "New Name",
+  "bio": "Hello world",
+  "username": "updatedUsername"
+}</pre>
+      </div>
+
+      <div class="card">
+        <h2>Post Routes</h2>
+        <p><span class="method get">GET</span><code>/api/post</code> <span class="auth">Auth Required</span></p>
+        <p>Fetch all posts created by the authenticated user. No request body is required.</p>
+
+        <p><span class="method post">POST</span><code>/api/post</code> <span class="auth">Auth Required</span></p>
+        <p>Create a new post using <code>multipart/form-data</code>:</p>
+        <ul>
+          <li><code>image-file</code> (required)</li>
+          <li><code>caption</code> (optional)</li>
+        </ul>
+
+        <p><span class="method delete">DELETE</span><code>/api/post/:postId</code> <span class="auth">Auth Required</span></p>
+        <p>Delete your own post using URL parameter <code>postId</code>. No request body is required.</p>
+      </div>
+
+      <div class="card">
+        <h2>Comment Routes</h2>
+        <p><span class="method post">POST</span><code>/comment/newComment</code> <span class="auth">Auth Required</span></p>
+        <p>Add a comment to a post.</p>
+        <pre>{
+  "postId": "<POST_ID>",
+  "text": "Nice post!"
+}</pre>
+
+        <p><span class="method get">GET</span><code>/comment/:postId</code> <span class="auth">Auth Required</span></p>
+        <p>Fetch comments for a specific post.</p>
+
+        <p><span class="method delete">DELETE</span><code>/comment/:commentId</code> <span class="auth">Auth Required</span></p>
+        <p>Delete a comment. This controller reads data from <code>body</code>:</p>
+        <pre>{
+  "commentId": "<COMMENT_ID>",
+  "postId": "<POST_ID>"
+}</pre>
+      </div>
+
+      <div class="card">
+        <h2>Like Route</h2>
+        <p><span class="method post">POST</span><code>/api/like/post/:postId</code> <span class="auth">Auth Required</span></p>
+        <p>Toggle like/unlike for a post. No request body is required.</p>
+      </div>
+    </div>
+  </body>
+</html>
