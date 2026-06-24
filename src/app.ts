@@ -1,4 +1,4 @@
-import express, {  Request, Response } from 'express';
+import express, { Request, Response } from 'express';
 import cookieParser from 'cookie-parser';
 import path from 'node:path';
 import cors from 'cors';
@@ -16,7 +16,7 @@ app.use(
     origin: [
       'http://localhost:5173',
       'https://insta-clone-red-kappa.vercel.app',
-      "http://10.120.35.33:5173"
+      'http://10.120.35.33:5173',
     ],
 
     credentials: true,
@@ -26,7 +26,7 @@ app.use(express.static('/public'));
 
 //? Routes
 
-app.use('/ping', async (req, res) => {
+app.use('/ping', async (_, res) => {
   res.sendStatus(200);
 });
 app.use('/api/auth', Routes.authRoutes);
