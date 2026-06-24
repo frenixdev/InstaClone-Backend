@@ -21,6 +21,9 @@ export const createCommentController = async (
       text,
     });
     if (!comment) throw new AppError('unable to create comment', 400);
+    await PostModel.findByIdAndUpdate(postId, {
+      $inc: { commentCount: +1 },
+    });
     req.result = comment;
     next();
   } catch (err) {

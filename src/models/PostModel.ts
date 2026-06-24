@@ -1,4 +1,4 @@
-import mongoose, {  Types } from 'mongoose';
+import mongoose, { Types } from 'mongoose';
 import { IPost } from 'types';
 
 const PostSchema = new mongoose.Schema<IPost>(
@@ -16,8 +16,14 @@ const PostSchema = new mongoose.Schema<IPost>(
       type: Types.ObjectId,
       ref: 'user',
     },
-    likeCount: Number,
-    commentCount: Number
+    likeCount: {
+      type: Number,
+      default: 0,
+    },
+    commentCount: {
+      type: Number,
+      default: 0,
+    },
   },
   {
     timestamps: true,

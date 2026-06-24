@@ -3,7 +3,7 @@ import { Request, Response } from 'express';
 export const sendCommentCreatedRes = async (req: Request, res: Response) => {
   return res.status(201).json({
     success: true,
-    message: 'commnt created successfully',
+    message: 'comment created successfully',
     data: req.result,
   });
 };
