@@ -13,6 +13,7 @@ export const errorHandler: ErrorRequestHandler = async (
       message: err.message,
       status: err.status,
       name: err.name,
+      erros: err.errors ?? null
     });
   }
 

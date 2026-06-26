@@ -26,7 +26,7 @@ export const registerController = async (
     // if (!otpRes || !otpRes.isVerified)
     //   throw new AppError('please verify otp first', 400);
     // await otpRes.deleteOne();
-    
+
     const hash = await bcrypt.hash(password, 10);
     const user = await UserModel.create({
       email,
@@ -47,24 +47,29 @@ export const loginController = async (
   next: NextFunction
 ) => {
   const { email, password, username } = req.body;
-  if (!email && !username) throw new AppError('invalid credentials', 400);
-  try {
-    const user = await UserModel.findOne({
-      $or: [{ username }, { email }],
-    })
-      .select('+password')
-      .lean();
-    console.log(user);
-    if (!user) throw new AppError("username or password doesn't match", 401);
-    const passwordMatched = await bcrypt.compare(password, user.password);
-    if (!passwordMatched)
-      throw new AppError("username or password doesn't match", 401);
-    req.result = user;
-    next();
-  } catch (err) {
-    console.log(err);
-    next(err);
-  }
+  if (!email && !username)
+    throw new AppError('Email or username is required', 400);
+  if (!password)
+    throw new AppError('validation failed', 401, {
+      username: 'username is required',
+      password: 'password is required',
+    });
+  // try {
+  const user = await UserModel.findOne({
+    $or: [{ username }, { email }],
+  })
+    .select('+password')
+    .lean();
+  if (!user) throw new AppError("username or password doesn't match", 401);
+  const passwordMatched = await bcrypt.compare(password, user.password);
+  if (!passwordMatched)
+    throw new AppError("username or password doesn't match", 401);
+  req.result = user;
+  next();
+  // } catch (err) {
+  //   console.log(err);
+  //   next(err);
+  // }
 };
 
 export const logoutController = async (req: Request, res: Response) => {

@@ -11,6 +11,7 @@ export const createPostController = async (
   const caption = req.body.caption || '';
   const img = req.file;
   const user = req.user;
+  console.log()
   if (!img) throw new AppError('invalid or unavailable image', 400);
 
   try {
@@ -20,13 +21,13 @@ export const createPostController = async (
       folder: '/posts',
     });
     if (!imageKitRes) throw new AppError('unable to upload image', 400);
-    console.log({ imageKitRes });
-    const post = await PostModel.create({
+     const resPost = await PostModel.create({
       caption,
       imageUrl: imageKitRes.url,
       thumbnailUrl: imageKitRes.thumbnailUrl,
       author: user,
-    });
+    })
+    const post = await PostModel.findById(resPost._id).populate("author").lean()
     if (!post) throw new AppError('Unable to create post', 400);
     req.result = post;
     next();
