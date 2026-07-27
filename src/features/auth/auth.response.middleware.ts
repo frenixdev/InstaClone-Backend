@@ -49,3 +49,15 @@ export const sendGetMeResponse = async (req: Request, res: Response) => {
     data: req.result,
   });
 };
+
+export const sendLogoutResponse = async (req: Request, res: Response) => {
+  res.clearCookie('token', {
+    httpOnly: true,
+    secure: true,
+    sameSite: 'none',
+  });
+  return res.status(200).json({
+    success: true,
+    message: 'logged out successfully',
+  });
+};

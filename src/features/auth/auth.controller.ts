@@ -1,5 +1,5 @@
 import { Request, Response, NextFunction } from 'express';
-import { OtpModel, UserModel } from 'models';
+import { BlackListModel, OtpModel, UserModel } from 'models';
 import bcrypt from 'bcryptjs';
 import { AppError } from '@/utils/AppError';
 
@@ -72,16 +72,14 @@ export const loginController = async (
   // }
 };
 
-export const logoutController = async (req: Request, res: Response) => {
-  res.clearCookie('token', {
-    httpOnly: true,
-    secure: true,
-    sameSite: 'none',
-  });
-  return res.status(200).json({
-    success: true,
-    message: 'logged out successfully',
-  });
+export const logoutController = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
+  const blackListToken = await BlackListModel.create({ token: req.token });
+  if (!blackListToken) throw new AppError('unable to logout', 400);
+  next();
 };
 
 interface ForgetBodyType {

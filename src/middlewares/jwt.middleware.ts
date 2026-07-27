@@ -1,8 +1,10 @@
 import jwt from 'jsonwebtoken';
 import { env } from '@/config';
 import type { Request, Response, NextFunction } from 'express';
+import { BlackListModel } from '../models';
+import { AppError } from '../utils/AppError';
 
-export const verifyTokenHandler = (
+export const verifyTokenHandler = async (
   req: Request,
   res: Response,
   next: NextFunction
@@ -13,6 +15,9 @@ export const verifyTokenHandler = (
       success: false,
       message: 'no token provided!',
     });
+  const isTokenBlackListed = await BlackListModel.findOne({ token });
+  if (isTokenBlackListed) throw new AppError('invalid Token', 401);
+  req.token = token
   const decoded = jwt.verify(token, env.JWT_SECRET) as { id: string };
   if (!decoded)
     return res.status(401).json({

@@ -15,10 +15,9 @@ app.use(
   cors({
     origin: [
       'http://localhost:5173',
-      'https://insta-clone-red-kappa.vercel.app',
       'http://10.120.35.33:5173',
+      'https://insta.frenix.space'
     ],
-
     credentials: true,
   })
 );

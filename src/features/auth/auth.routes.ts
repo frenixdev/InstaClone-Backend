@@ -69,5 +69,10 @@ authRoutes.get(
   auth.getMeController,
   response.sendGetMeResponse
 );
-authRoutes.post('/logout', auth.logoutController);
+authRoutes.post(
+  '/logout',
+  verifyTokenHandler,
+  auth.logoutController,
+  response.sendLogoutResponse
+);
 export { authRoutes };
